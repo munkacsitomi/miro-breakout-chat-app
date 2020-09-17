@@ -32,37 +32,37 @@
     });
 </script>
 
-<style>
-    .sidebar__container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
-    }
+<style type="text/scss">
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 
-    .sidebar__header {
+    &__header {
         padding: 24px;
         height: 64px;
     }
 
-    .sidebar__body {
+    &__body {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         height: calc(100% - 120px);
-        padding: 0 24px;
-    }
-
-    .sidebar__footer {
         padding: 0 8px;
     }
 
-    .sidebar__footer input {
-        width: 100%;
+    &__footer {
+        padding: 0 8px;
+
+        input {
+            width: 100%;
+        }
     }
+}
 </style>
 
-<div class="sidebar__container">
+<div class="sidebar">
     <div class="sidebar__header">
         <span class="miro-h2">Breakout Chat</span>
     </div>

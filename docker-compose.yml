@@ -30,7 +30,9 @@ services:
       - app-network
     depends_on:
       - backend
-    command: "npm run dev"
+    command: > #we need to rebuild node-sass inside of the container first
+      sh -c "node node_modules/node-sass/scripts/install.js &&
+             npm run dev"
 
 networks:
   app-network:
