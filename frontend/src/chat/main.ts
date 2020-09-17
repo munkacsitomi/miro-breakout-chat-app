@@ -19,16 +19,14 @@ const initApp = (
 }
 
 const getCurrentUserName = async () => {
-	const id = await miro.currentUser.getId();
 	// @ts-ignore
-	const onlineUsers = await miro.board.getOnlineUsers();
+	const [id, onlineUsers] = await Promise.all([miro.currentUser.getId(), miro.board.getOnlineUsers()]);
 
 	return onlineUsers.find(user => user.id === id)?.name;
 }
 
 miro.onReady(async () => {
-	const savedState = await miro.__getRuntimeState();
-	const name = await getCurrentUserName();
+	const [savedState, name] = await Promise.all([miro.__getRuntimeState(), getCurrentUserName()]);
 
 	if (savedState[CLIENT_ID]?.breakoutChatRoomId && name) {
 		initApp(
