@@ -9,6 +9,10 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "./node_modules/.bin/nodemon index.js"
+    "dev": "./node_modules/.bin/nodemon index.js",
+    "lint": "eslint ./ --ext .js"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0"
   }
 }

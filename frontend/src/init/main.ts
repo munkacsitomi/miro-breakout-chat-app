@@ -46,10 +46,7 @@ const initPlugin = async () => {
   // @ts-ignore
   miro.addListener(miro.enums.event.SELECTION_UPDATED, async () => {
     const widgets = await miro.board.selection.get();
-    if (
-      widgets.length === 1 &&
-      widgets[0].metadata[CLIENT_ID]?.isBreakoutChatButton
-    ) {
+    if (widgets.length === 1 && widgets[0].metadata[CLIENT_ID]?.isBreakoutChatButton) {
       initChat(widgets[0].id);
     }
   });
