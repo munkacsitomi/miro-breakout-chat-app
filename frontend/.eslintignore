@@ -2,3 +2,4 @@ node_modules
 *.d.ts
 bundle.js
 rollup.config.js
+.eslintrc.js

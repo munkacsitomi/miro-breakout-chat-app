@@ -6,8 +6,6 @@ export interface Message {
 
 export type MessageHandler = (msg: string, name: string) => void;
 
-export type EmitHandler = (error: any, response: any) => void;
-
 export interface ChatSettings {
   roomId: string;
   name: string;

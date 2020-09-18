@@ -5,7 +5,6 @@ const http = require('http').Server(app);
 const socketConfig = require('./config');
 const io = require('socket.io')(http, socketConfig);
 const port = process.env.PORT || 8081;
-
 const rooms = {};
 const roomsCreatedAt = new WeakMap();
 const names = new WeakMap();
