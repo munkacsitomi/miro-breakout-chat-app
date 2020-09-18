@@ -4,10 +4,10 @@ import { CHAT_HOST, CHAT_OPTIONS } from '../../config';
 
 import type { ChatSettings, ChatController } from '../interfaces/chat';
 
-const initChat = ({ roomId, name, messageHandler }: ChatSettings): ChatController => {
+const initChat = ({ roomId, user, messageHandler }: ChatSettings): ChatController => {
   const socket = io(CHAT_HOST, CHAT_OPTIONS);
 
-  socket.emit('join', roomId, name, () => {});
+  socket.emit('join', roomId, user.name, user.id, () => {});
 
   socket.on('chat message', messageHandler);
 

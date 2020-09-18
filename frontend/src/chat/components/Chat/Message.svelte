@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Message } from '../../interfaces/chat';
+  import { currentUser } from "../../store";
   export let message: Message;
 </script>
 
@@ -70,7 +71,7 @@
   }
 </style>
 
-<div class="message message--dark">
+<div class="message" class:message--dark={message.authorId === $currentUser.id}>
   <div class="message__container">
     <div class="message__author">{decodeURIComponent(message.author)}</div>
     <p class="message__text">{message.text}</p>

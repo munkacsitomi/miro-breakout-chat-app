@@ -1,25 +1,25 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Message from './Message.svelte';
-
   import type {
     MessageHandler,
     Message as MessageInterface,
     ChatController,
     ChatSettings,
+    User,
   } from '../../interfaces/chat';
 
   export let chatFactory: (settings: ChatSettings) => ChatController;
   export let roomId: string;
-  export let name: string;
+  export let user: User;
 
   let newMessageText: string = '';
 
   let chatController: ChatController = null;
 
   let messages: Array<MessageInterface> = [];
-  const handleNewMessage: MessageHandler = (text, author) => {
-    messages = [...messages, { text, author, timestamp: new Date() }];
+  const handleNewMessage: MessageHandler = (text, author, authorId) => {
+    messages = [...messages, { text, author, authorId, timestamp: new Date() }];
   };
 
   const handleMessageSend = () => {
@@ -35,7 +35,7 @@
   onMount(() => {
     chatController = chatFactory({
       roomId,
-      name,
+      user,
       messageHandler: handleNewMessage,
     });
   });
