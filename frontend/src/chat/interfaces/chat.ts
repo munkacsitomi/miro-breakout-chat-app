@@ -4,6 +4,11 @@ export interface Message {
   timestamp: Date;
 }
 
+export interface User {
+  id: string;
+  name: string;
+}
+
 export type MessageHandler = (msg: string, name: string) => void;
 
 export interface ChatSettings {
