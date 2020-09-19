@@ -4,18 +4,26 @@ const cors = require('cors');
 const http = require('http').Server(app);
 const socketConfig = require('./config');
 const io = require('socket.io')(http, socketConfig);
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const { connectDB, getAllMessages, saveMessage } = require('./controllers/mongodb');
 const port = process.env.PORT || 8081;
 const rooms = {};
 const roomsCreatedAt = new WeakMap();
 const names = new WeakMap();
-const mongoUrl = 'mongodb://database:27017/chat-mongo-db';
 
 let roomId;
 let name;
 let userId;
 
 app.use(cors());
+app.use(bodyParser.json());
+
+connectDB();
+
+app.get('/messages', async (req, res) => {
+  const messages = await getAllMessages();
+  res.json(messages);
+});
 
 app.get('/rooms/:roomId', (req, res) => {
   const { roomId } = req.params;
@@ -68,6 +76,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     io.to(roomId).emit('chat message', msg, name, userId);
+    saveMessage(msg, name, userId);
   });
 
   socket.on('disconnect', () => {
@@ -85,8 +94,3 @@ io.on('connection', (socket) => {
 http.listen(port, '0.0.0.0', () => {
   console.log('listening on *:' + port);
 });
-
-mongoose
-  .connect(mongoUrl, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
-  .then(() => console.log('Successful to connect MongoDB'))
-  .catch((err) => console.log('Failed to connect MongoDB', err));
