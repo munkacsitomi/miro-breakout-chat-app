@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
-import type { User } from './interfaces/chat';
+import type { Message, User } from './interfaces/chat';
 
 export const currentUser = writable({} as User);
+export const storedMessages = writable([] as Message[]);

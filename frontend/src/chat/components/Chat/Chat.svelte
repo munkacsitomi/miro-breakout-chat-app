@@ -3,23 +3,21 @@
   import Message from './Message.svelte';
   import type {
     MessageHandler,
-    Message as MessageInterface,
     ChatController,
     ChatSettings,
     User,
   } from '../../interfaces/chat';
+  import { storedMessages } from '../../store';
 
   export let chatFactory: (settings: ChatSettings) => ChatController;
   export let roomId: string;
   export let user: User;
 
   let newMessageText: string = '';
-
   let chatController: ChatController = null;
 
-  let messages: Array<MessageInterface> = [];
   const handleNewMessage: MessageHandler = (text, author, authorId) => {
-    messages = [...messages, { text, author, authorId, timestamp: new Date() }];
+    storedMessages.set([...$storedMessages, { text, author, authorId, timestamp: new Date() }]);
   };
 
   const handleMessageSend = () => {
@@ -74,7 +72,7 @@
 <div class="sidebar">
   <div class="sidebar__header"><span class="miro-h2">Breakout Chat</span></div>
   <div class="sidebar__body">
-    {#each messages as message}
+    {#each $storedMessages as message}
       <Message {message} />
     {/each}
   </div>
