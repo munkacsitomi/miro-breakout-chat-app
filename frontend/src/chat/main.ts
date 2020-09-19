@@ -39,9 +39,14 @@ miro.onReady(async () => {
     fetchData(messagesUrl),
   ]);
 
-  console.log(messages);
+  // TODO: find a better solution to handle dates
+  const filteredMessages = messages.map((message) => {
+    const { author, text, authorId, timestamp } = message;
+    return { author, text, authorId, timestamp: new Date(timestamp) };
+  });
+  console.log(filteredMessages);
   currentUser.set(user);
-  // storedMessages.set(messages);
+  storedMessages.set(filteredMessages);
 
   if (savedState[CLIENT_ID]?.breakoutChatRoomId && user) {
     initApp(savedState[CLIENT_ID].breakoutChatRoomId, user);

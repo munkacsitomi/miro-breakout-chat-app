@@ -16,7 +16,7 @@ const connectDB = async () => {
   }
 };
 
-const getAllMessages = async () => await Message.find({}).exec();
+const getAllMessages = async () => await Message.find({});
 
 const saveMessage = (msg, name, userId) => {
   const message = new Message({

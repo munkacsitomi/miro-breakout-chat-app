@@ -22,7 +22,7 @@ connectDB();
 
 app.get('/messages', async (req, res) => {
   const messages = await getAllMessages();
-  res.json(messages);
+  res.status(200).json(messages);
 });
 
 app.get('/rooms/:roomId', (req, res) => {
