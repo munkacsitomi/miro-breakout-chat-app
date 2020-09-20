@@ -76,5 +76,5 @@
     <div class="message__author">{decodeURIComponent(message.author)}</div>
     <p class="message__text">{message.text}</p>
   </div>
-  <div class="message__time">{message.timestamp.toLocaleTimeString().slice(0, 5)}</div>
+  <div class="message__time">{message.createdAt.toLocaleTimeString().slice(0, 5)}</div>
 </div>

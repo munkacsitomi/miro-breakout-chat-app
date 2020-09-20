@@ -1,8 +1,8 @@
 import socketioControllerFactory from './controllers/socketIoController';
 import Chat from './components/Chat/Chat.svelte';
 import Error from './components/Error.svelte';
-import { CLIENT_ID } from '../config';
-import type { User } from './interfaces/chat';
+import { CLIENT_ID, messagesUrl } from '../config';
+import type { Message, User } from './interfaces/chat';
 import { currentUser, storedMessages } from './store';
 
 const initApp = (roomId: string, user: User) => {
@@ -31,22 +31,27 @@ const fetchData = async (url: string) => {
   return await res.json();
 };
 
+const messageFactory = ({ author, text, authorId, createdAt }): Message => ({
+  author,
+  text,
+  authorId,
+  createdAt: new Date(createdAt),
+});
+
+const setStoreData = (messages: Message[], user: User) => {
+  const filteredMessages = messages.map((message: Message) => messageFactory(message));
+  currentUser.set(user);
+  storedMessages.set(filteredMessages);
+};
+
 miro.onReady(async () => {
-  const messagesUrl = 'http://localhost:8081/messages';
   const [savedState, user, messages] = await Promise.all([
     miro.__getRuntimeState(),
     getCurrentUser(),
     fetchData(messagesUrl),
   ]);
 
-  // TODO: find a better solution to handle dates
-  const filteredMessages = messages.map((message) => {
-    const { author, text, authorId, timestamp } = message;
-    return { author, text, authorId, timestamp: new Date(timestamp) };
-  });
-  console.log(filteredMessages);
-  currentUser.set(user);
-  storedMessages.set(filteredMessages);
+  setStoreData(messages, user);
 
   if (savedState[CLIENT_ID]?.breakoutChatRoomId && user) {
     initApp(savedState[CLIENT_ID].breakoutChatRoomId, user);

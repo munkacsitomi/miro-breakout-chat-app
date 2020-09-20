@@ -23,7 +23,6 @@ const saveMessage = (msg, name, userId) => {
     text: msg,
     author: name,
     authorId: userId,
-    timestamp: new Date(),
   });
 
   message.save();

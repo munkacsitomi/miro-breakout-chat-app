@@ -2,7 +2,7 @@ export interface Message {
   text: string;
   author: string;
   authorId: string;
-  timestamp: Date;
+  createdAt: Date;
 }
 
 export interface User {

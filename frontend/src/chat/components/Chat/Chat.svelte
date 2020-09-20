@@ -17,7 +17,8 @@
   let chatController: ChatController = null;
 
   const handleNewMessage: MessageHandler = (text, author, authorId) => {
-    storedMessages.set([...$storedMessages, { text, author, authorId, timestamp: new Date() }]);
+    // TODO: use returned data from the backend instead of updating the store
+    storedMessages.set([...$storedMessages, { text, author, authorId, createdAt: new Date() }]);
   };
 
   const handleMessageSend = () => {
