@@ -1,85 +1,93 @@
 <script lang="ts">
-    import { onMount, afterUpdate } from 'svelte';
-    import Message from './Message.svelte';
+  import { onMount } from 'svelte';
+  import Message from './Message.svelte';
+  import type { MessageHandler, ChatController, ChatSettings, User } from '../../interfaces/chat';
+  import { storedMessages } from '../../store';
 
-    import type { MessageHandler, EmitHandler, Message as MessageInterface, ChatController, ChatSettings } from '../../interfaces/chat';
+  export let chatFactory: (settings: ChatSettings) => ChatController;
+  export let roomId: string;
+  export let user: User;
 
-    export let chatFactory: (settings: ChatSettings) => ChatController;
-    export let roomId: string;
-    export let name: string;
+  let newMessageText: string = '';
+  let chatController: ChatController = null;
 
-    let newMessageText: string = '';
+  const handleNewMessage: MessageHandler = (message) => {
+    storedMessages.set([...$storedMessages, message]);
+  };
 
-    let chatController: ChatController = null;
+  const handleMessageSend = () => {
+    if (!newMessageText) return;
 
-    let messages: Array<MessageInterface> = [];
-    const handleNewMessage: MessageHandler = (text, author) => {
-        messages = [...messages, { text, author, timestamp: new Date() }];
-    }
+    chatController.sendMessage(newMessageText);
 
-    const handleMessageSend = () => {
-        if (!newMessageText) return;
+    newMessageText = '';
 
-        chatController.sendMessage(newMessageText);
+    return false;
+  };
 
-        newMessageText = '';
+  $: extendedMessages = $storedMessages.reduce((curr, acc, i, arr) => {
+    const prevMessage = arr[i - 1];
+    const hasSameAuthor = prevMessage && prevMessage.authorId === acc.authorId;
 
-        return false;
-    }
+    acc.showAuthor = !hasSameAuthor;
 
-    onMount(() => {
-        chatController = chatFactory({ roomId, name, messageHandler: handleNewMessage });
+    return [...curr, acc];
+  }, []);
+
+  onMount(() => {
+    chatController = chatFactory({
+      roomId,
+      user,
+      messageHandler: handleNewMessage,
     });
+  });
 </script>
 
-<style>
-    .sidebar__container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
+<style type="text/scss">
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    &__header {
+      padding: 24px;
+      height: 64px;
     }
 
-    .sidebar__header {
-        padding: 24px;
-        height: 64px;
+    &__body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: calc(100% - 120px);
+      padding: 0 8px;
     }
 
-    .sidebar__body {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        height: calc(100% - 120px);
-        padding: 0 24px;
-    }
+    &__footer {
+      padding: 0 8px;
 
-    .sidebar__footer {
-        padding: 0 8px;
-    }
-
-    .sidebar__footer input {
+      input {
         width: 100%;
+      }
     }
+  }
 </style>
 
-<div class="sidebar__container">
-    <div class="sidebar__header">
-        <span class="miro-h2">Breakout Chat</span>
-    </div>
-    <div class="sidebar__body">
-        {#each messages as message}
-            <Message message={message} />
-        {/each}
-    </div>
-    <div class="sidebar__footer">
-        <form on:submit|preventDefault={handleMessageSend}>
-            <input
-                disabled={chatController === null}
-                type="text"
-                class="miro-input miro-input--primary"
-                bind:value={newMessageText}
-                placeholder="Type your message here"
-            >
-        </form>
-    </div>
+<div class="sidebar">
+  <div class="sidebar__header"><span class="miro-h2">Breakout Chat</span></div>
+  <div class="sidebar__body">
+    {#each extendedMessages as message}
+      <Message {message} />
+    {/each}
+  </div>
+  <div class="sidebar__footer">
+    <form on:submit|preventDefault={handleMessageSend}>
+      <input
+        disabled={chatController === null}
+        type="text"
+        class="miro-input miro-input--primary"
+        bind:value={newMessageText}
+        placeholder="Type your message here" />
+    </form>
+  </div>
 </div>

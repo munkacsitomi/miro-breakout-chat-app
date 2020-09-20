@@ -1,3 +1,5 @@
+docker pull mongo:latest
+
 cd backend
 npm i
 wait
