@@ -2,7 +2,7 @@ export interface Message {
   text: string;
   author: string;
   authorId: string;
-  createdAt: Date;
+  timestamp: Date;
 }
 
 export interface User {
@@ -10,7 +10,7 @@ export interface User {
   name: string;
 }
 
-export type MessageHandler = (msg: string, name: string, userId: string) => void;
+export type MessageHandler = (message: Message) => void;
 
 export interface ChatSettings {
   roomId: string;

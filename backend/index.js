@@ -11,10 +11,6 @@ const rooms = {};
 const roomsCreatedAt = new WeakMap();
 const names = new WeakMap();
 
-let roomId;
-let name;
-let userId;
-
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -44,6 +40,10 @@ app.get('/rooms', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  let roomId;
+  let name;
+  let userId;
+
   socket.on('join', (_roomId, _name, _id, callback) => {
     if (!_roomId || !_name) {
       if (callback) {
@@ -75,8 +75,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (msg) => {
-    io.to(roomId).emit('chat message', msg, name, userId);
-    saveMessage(msg, name, userId);
+    const savedMessage = saveMessage(msg, name, userId);
+    io.to(roomId).emit('chat message', savedMessage);
   });
 
   socket.on('disconnect', () => {

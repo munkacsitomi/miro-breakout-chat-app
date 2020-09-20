@@ -31,17 +31,9 @@ const fetchData = async (url: string) => {
   return await res.json();
 };
 
-const messageFactory = ({ author, text, authorId, createdAt }): Message => ({
-  author,
-  text,
-  authorId,
-  createdAt: new Date(createdAt),
-});
-
 const setStoreData = (messages: Message[], user: User) => {
-  const filteredMessages = messages.map((message: Message) => messageFactory(message));
   currentUser.set(user);
-  storedMessages.set(filteredMessages);
+  storedMessages.set(messages);
 };
 
 miro.onReady(async () => {

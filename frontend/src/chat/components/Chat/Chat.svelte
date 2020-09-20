@@ -1,12 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Message from './Message.svelte';
-  import type {
-    MessageHandler,
-    ChatController,
-    ChatSettings,
-    User,
-  } from '../../interfaces/chat';
+  import type { MessageHandler, ChatController, ChatSettings, User } from '../../interfaces/chat';
   import { storedMessages } from '../../store';
 
   export let chatFactory: (settings: ChatSettings) => ChatController;
@@ -16,9 +11,8 @@
   let newMessageText: string = '';
   let chatController: ChatController = null;
 
-  const handleNewMessage: MessageHandler = (text, author, authorId) => {
-    // TODO: use returned data from the backend instead of updating the store
-    storedMessages.set([...$storedMessages, { text, author, authorId, createdAt: new Date() }]);
+  const handleNewMessage: MessageHandler = (message) => {
+    storedMessages.set([...$storedMessages, message]);
   };
 
   const handleMessageSend = () => {

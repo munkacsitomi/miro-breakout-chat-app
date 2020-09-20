@@ -1,7 +1,15 @@
 <script lang="ts">
   import type { Message } from '../../interfaces/chat';
-  import { currentUser } from "../../store";
+  import { currentUser } from '../../store';
   export let message: Message;
+
+  const formatTime = (timestamp: string | Date) => {
+    if (typeof timestamp === 'string') {
+      timestamp = new Date(timestamp);
+    }
+
+    return timestamp.toLocaleTimeString().slice(0, 5);
+  };
 </script>
 
 <style type="text/scss">
@@ -76,5 +84,5 @@
     <div class="message__author">{decodeURIComponent(message.author)}</div>
     <p class="message__text">{message.text}</p>
   </div>
-  <div class="message__time">{message.createdAt.toLocaleTimeString().slice(0, 5)}</div>
+  <div class="message__time">{formatTime(message.timestamp)}</div>
 </div>
