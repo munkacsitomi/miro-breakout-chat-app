@@ -4,6 +4,8 @@
   export let message: Message;
 
   const formatTime = (timestamp: string | Date) => {
+    if (!timestamp) return;
+
     if (typeof timestamp === 'string') {
       timestamp = new Date(timestamp);
     }
@@ -25,7 +27,7 @@
     flex-direction: row;
 
     &__container {
-      margin: 6px 0;
+      margin-bottom: 4px;
       background-color: $gray-8;
       align-self: flex-start;
       padding: 10px 8px;
@@ -42,12 +44,13 @@
     &__author {
       font-weight: 700;
       line-height: 14px;
+      margin-bottom: 6px;
     }
 
     &__text {
       font-weight: 400;
       line-height: 20px;
-      margin: 6px 0 0;
+      margin: 0;
     }
 
     &__time {
@@ -76,12 +79,21 @@
         color: $passionate;
       }
     }
+
+    &--showAuthor #{$el}__container {
+      margin-top: 14px;
+    }
   }
 </style>
 
-<div class="message" class:message--dark={message.authorId === $currentUser.id}>
+<div
+  class="message"
+  class:message--dark={message.authorId === $currentUser.id}
+  class:message--showAuthor={message.showAuthor}>
   <div class="message__container">
-    <div class="message__author">{decodeURIComponent(message.author)}</div>
+    {#if message.showAuthor}
+      <div class="message__author">{decodeURIComponent(message.author)}</div>
+    {/if}
     <p class="message__text">{message.text}</p>
   </div>
   <div class="message__time">{formatTime(message.timestamp)}</div>

@@ -25,6 +25,15 @@
     return false;
   };
 
+  $: extendedMessages = $storedMessages.reduce((curr, acc, i, arr) => {
+    const prevMessage = arr[i - 1];
+    const hasSameAuthor = prevMessage && prevMessage.authorId === acc.authorId;
+
+    acc.showAuthor = !hasSameAuthor;
+
+    return [...curr, acc];
+  }, []);
+
   onMount(() => {
     chatController = chatFactory({
       roomId,
@@ -67,7 +76,7 @@
 <div class="sidebar">
   <div class="sidebar__header"><span class="miro-h2">Breakout Chat</span></div>
   <div class="sidebar__body">
-    {#each $storedMessages as message}
+    {#each extendedMessages as message}
       <Message {message} />
     {/each}
   </div>

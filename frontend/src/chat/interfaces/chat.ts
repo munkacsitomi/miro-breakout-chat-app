@@ -3,6 +3,7 @@ export interface Message {
   author: string;
   authorId: string;
   timestamp: Date;
+  showAuthor?: boolean;
 }
 
 export interface User {
